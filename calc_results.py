@@ -11,8 +11,8 @@ stimes, etimes = [], []
 length, overlap, windows = 2**12, 2**8, 3*60*60
 
 # West vault firs times  need to adjust
-stimes.append(UTCDateTime('2020-282T00:00:00'))
-etimes.append(UTCDateTime('2020-283T00:00:00'))
+stimes.append(UTCDateTime('2020-283T00:00:00'))
+etimes.append(UTCDateTime('2020-284T00:00:00'))
 
 def cp(tr1,tr2):
     cpval,fre = csd(tr1.data, tr2.data, NFFT=length,
@@ -53,8 +53,9 @@ def write_noise(psd1, psd2, psd3, per, f, time, chan, label, band):
             str(time.hour).zfill(2) + ', ' + str(np.mean(pow3)) + ', ' + str(np.std(pow3)) + '\n')
     return
 
-def calc_azi(st, f):       
+def calc_azi(st, inv, f):       
     st_azi = st.copy()
+    st_azi.remove_response(inv)
     st_azi.decimate(4)
     st_azi.decimate(2)
     st_azi.decimate(5)
@@ -62,17 +63,16 @@ def calc_azi(st, f):
     st_azi.filter('bandpass', freqmin = 1/8, freqmax=1/4)
     st_azi.taper(0.05)
 
+    # These conventions differ from the 2017 paper
     def rot(theta,sta1, loc1, sta2, loc2):
         st1 = st_azi.select(station=sta1, location=loc1)
-        print(st1)
         st2 = st_azi.select(station=sta2, location=loc2)
-        print(st2)
         theta = theta % 360.
         cosd=np.cos(np.deg2rad(theta))
         sind=np.sin(np.deg2rad(theta))
-        data1 = cosd*st1[0].data - sind*st2[0].data
-        data2 = sind*st1[0].data + cosd*st2[0].data
-        resi = abs(sum(data1*st1[1].data)/np.sqrt(sum(data1**2)*sum(st1[1].data**2)) -1.)
+        data1 = cosd*st1[0].data - sind*st1[1].data
+        data2 = sind*st1[0].data + cosd*st1[1].data
+        resi = abs(sum(data1*st2[0].data)/np.sqrt(sum(data1**2)*sum(st2[0].data**2)) -1.)
         return resi
 
     def rot1(theta):
@@ -82,10 +82,10 @@ def calc_azi(st, f):
     def rot3(theta):
         return rot(theta,'ALQ2','00', 'TST4','10')
 
-
     theta1 = root(rot1, 0., method = 'lm' ).x[0]
     theta2 = root(rot2, 0., method = 'lm' ).x[0]
     theta3 = root(rot3, 0., method = 'lm' ).x[0]
+
     f.write('Orient 1 2, ' + str(st[0].stats.starttime.julday).zfill(3) + ', '
         + str(st[0].stats.starttime.hour).zfill(2) + ', ' + str(theta1) + ', '
         + str(rot1(theta1)) + '\n')
@@ -119,7 +119,6 @@ for stime, etime in zip(stimes, etimes):
     if debug:
         print(st)
     f = open('Results_' + str(stime.julday).zfill(3) + '.csv','w')
-
 
     # For each data window we want to calculate the self-noise, psd, orientation
     for st_wind in st.slide(windows, windows):
@@ -165,8 +164,6 @@ for stime, etime in zip(stimes, etimes):
             write_noise(n11, n22, n33, per, f, st_chan[0].stats.starttime, chan, label, band)
 
         # Now we want to estimate the orientations for this time period
-        calc_azi(st_wind, f)
+        calc_azi(st_wind, inv, f)
 
     f.close()
-
-
