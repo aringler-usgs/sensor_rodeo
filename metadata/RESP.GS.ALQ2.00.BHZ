@@ -1,0 +1,196 @@
+#
+###################################################################################
+#
+B050F03     Station:     ALQ2
+B050F16     Network:     GS
+B052F03     Location:    00
+B052F04     Channel:     BHZ
+B052F22     Start date:  2018,165,00:00:00
+B052F23     End date:    No Ending Time
+#
+#                  +-----------------------------------+
+#                  |    Response (Poles and Zeros)     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B053F03     Transfer function type:                A - Laplace transform analog response, in rad/sec
+B053F04     Stage sequence number:                 1
+B053F05     Response in units lookup:              m/s - Velocity in meters per second
+B053F06     Response out units lookup:             V - Voltage in Volts
+B053F07     A0 normalization factor:               +9.77261E+12
+B053F08     Normalization frequency:               +2.00000E-02
+B053F09     Number of zeroes:                      8
+B053F14     Number of poles:                       13
+#              Complex zeroes:
+#              i  real          imag          real_error    imag_error
+B053F10-13    13  +0.00000E+00  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    14  +0.00000E+00  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    15  -2.19911E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    16  -2.19911E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    17  -3.51858E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    18  -6.05071E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F10-13    19  -5.21504E+02  -9.60699E+02  +0.00000E+00  +0.00000E+00
+B053F10-13    20  -5.21504E+02  +9.60699E+02  +0.00000E+00  +0.00000E+00
+#              Complex poles:
+#              i  real          imag          real_error    imag_error
+B053F15-18     0  -1.23581E-02  +1.24500E-02  +0.00000E+00  +0.00000E+00
+B053F15-18     1  -1.23581E-02  -1.24500E-02  +0.00000E+00  +0.00000E+00
+B053F15-18     2  -2.23068E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     3  -2.23068E+01  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     4  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     5  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     6  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     7  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     8  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18     9  -5.01105E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+B053F15-18    10  -1.21580E+02  -6.47231E+02  +0.00000E+00  +0.00000E+00
+B053F15-18    11  -1.21580E+02  +6.47231E+02  +0.00000E+00  +0.00000E+00
+B053F15-18    12  -3.51858E+02  +0.00000E+00  +0.00000E+00  +0.00000E+00
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 1
+B058F04     Sensitivity:                           +1.18300E+03
+B058F05     Frequency of sensitivity:              +2.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 2
+B058F04     Sensitivity:                           +1.00000E+00
+B058F05     Frequency of sensitivity:              +2.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Response (Coefficients)      |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B054F03     Transfer function type:                D
+B054F04     Stage sequence number:                 3
+B054F05     Response in units lookup:              V - Voltage in Volts
+B054F06     Response out units lookup:             counts - Digital Count in Digital counts
+B054F07     Number of numerators:                  0
+B054F10     Number of denominators:                0
+#
+#                  +-----------------------------------+
+#                  |            Decimation             |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B057F03     Stage sequence number:                  3
+B057F04     Input sample rate (HZ):                 4.0000E+01
+B057F05     Decimation factor:                      00001
+B057F06     Decimation offset:                      00000
+B057F07     Estimated delay (seconds):             +0.0000E+00
+B057F08     Correction applied (seconds):          +0.0000E+00
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 3
+B058F04     Sensitivity:                           +1.67772E+06
+B058F05     Frequency of sensitivity:              +2.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |           FIR Response            |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B061F03     Stage sequence number:                 4
+B061F04     Response Name:                         Q330_HR_1_40_below100_4
+B061F05     Symmetry Code:                         A
+B061F06     Response in units lookup:              counts - Digital Count in Digital counts
+B061F07     Response out units lookup:             counts - Digital Count in Digital counts
+B061F08     Number of Coefficients:                39
+#              i  FIR Coefficient
+B061F09     0  +4.18952E-13
+B061F09     1  +3.30318E-04
+B061F09     2  +1.02921E-03
+B061F09     3  -3.14123E-03
+B061F09     4  +2.05709E-04
+B061F09     5  +1.52521E-03
+B061F09     6  -6.23193E-03
+B061F09     7  +1.04801E-02
+B061F09     8  -1.31202E-02
+B061F09     9  +1.07821E-02
+B061F09    10  -1.44455E-03
+B061F09    11  -1.58729E-02
+B061F09    12  +3.95074E-02
+B061F09    13  -6.51036E-02
+B061F09    14  +8.53716E-02
+B061F09    15  -8.91913E-02
+B061F09    16  +5.00619E-02
+B061F09    17  +8.37233E-01
+B061F09    18  +2.66723E-01
+B061F09    19  -1.66693E-01
+B061F09    20  +9.52840E-02
+B061F09    21  -5.09218E-02
+B061F09    22  +1.61458E-02
+B061F09    23  +7.06362E-03
+B061F09    24  -1.83877E-02
+B061F09    25  +1.99414E-02
+B061F09    26  -1.54895E-02
+B061F09    27  +8.52735E-03
+B061F09    28  -2.55789E-03
+B061F09    29  -1.81103E-03
+B061F09    30  +2.42649E-03
+B061F09    31  -3.75769E-03
+B061F09    32  +4.67293E-04
+B061F09    33  +6.33072E-04
+B061F09    34  -1.56874E-06
+B061F09    35  -1.25480E-05
+B061F09    36  +3.21041E-07
+B061F09    37  -2.63324E-08
+B061F09    38  -5.09997E-08
+#
+#                  +-----------------------------------+
+#                  |            Decimation             |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B057F03     Stage sequence number:                  4
+B057F04     Input sample rate (HZ):                 4.0000E+01
+B057F05     Decimation factor:                      00001
+B057F06     Decimation offset:                      00000
+B057F07     Estimated delay (seconds):             +4.3046E-01
+B057F08     Correction applied (seconds):          +4.3046E-01
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 4
+B058F04     Sensitivity:                           +1.00000E+00
+B058F05     Frequency of sensitivity:              +2.00000E-02
+B058F06     Number of calibrations:                0
+#
+#                  +-----------------------------------+
+#                  |      Channel Sensitivity/Gain     |
+#                  |        GS  ALQ2   00  BHZ         |
+#                  |    06/14/2018 to No Ending Time   |
+#                  +-----------------------------------+
+#
+B058F03     Stage sequence number:                 0
+B058F04     Sensitivity:                           +1.98474E+09
+B058F05     Frequency of sensitivity:              +2.00000E-02
+B058F06     Number of calibrations:                0
