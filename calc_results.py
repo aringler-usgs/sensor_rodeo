@@ -1,18 +1,32 @@
 #!/usr/bin/env python
 import glob
 import numpy as np
+import matplotlib.pyplot as plt
 from obspy.core import UTCDateTime, read, Stream
 from obspy.core.inventory import read_inventory
 from matplotlib.mlab import csd
 from scipy.optimize import root
+from obspy.signal.spectral_estimation import get_nlnm, get_nhnm
 
-debug, plot = True, False
+
+
+import matplotlib as mpl
+mpl.rc('font',family='serif')
+mpl.rc('font',serif='Times')
+mpl.rc('text', usetex=True)
+mpl.rc('font',size=16)
+
+debug, plot = True, True
 stimes, etimes = [], []
-length, overlap, windows = 2**12, 2**8, 3*60*60
+length, overlap, windows = 2**14, 2**8, 4*60*60
 
-# West vault firs times  need to adjust
-stimes.append(UTCDateTime('2020-283T00:00:00'))
-etimes.append(UTCDateTime('2020-284T00:00:00'))
+# West vault firs times
+stimes.append(UTCDateTime('2020-282T21:00:00'))
+etimes.append(UTCDateTime('2020-289T16:00:00'))
+
+# Xtunnel vault need to adjust end time
+stimes.append(UTCDateTime('2020-289T17:45:00'))
+etimes.append(UTCDateTime('2020-296T00:00:00'))
 
 def cp(tr1,tr2):
     cpval,fre = csd(tr1.data, tr2.data, NFFT=length,
@@ -20,7 +34,31 @@ def cp(tr1,tr2):
                     noverlap=overlap, scale_by_freq=True)
     return cpval[1:], fre[1:]
 
-def plot_psd_noise():
+def plot_psd_noise(psd1, n11, psd2, n22, psd3, n33, per, st_chan):
+    fig = plt.figure(1, figsize=(9,9))
+    plt.semilogx(per,psd1, label='PSD ' + (st_chan[0].id).replace('.', ' '))
+    plt.semilogx(per,n11, label='Noise ' + (st_chan[2].id).replace('.', ' '))
+    plt.semilogx(per,psd2, label='PSD ' + (st_chan[1].id).replace('.', ' '))
+    plt.semilogx(per,n22, label='Noise ' + (st_chan[2].id).replace('.', ' '))
+    plt.semilogx(per,psd3, label='PSD ' + (st_chan[2].id).replace('.', ' '))
+    plt.semilogx(per,n33, label='Noise ' + (st_chan[2].id).replace('.', ' '))
+    per2, nlnm = get_nlnm()
+    per2, nhnm = get_nhnm()
+    plt.semilogx(per2, nlnm, color='k', linewidth=2)
+    plt.semilogx(per2, nhnm, color='k', linewidth=2, label='NLNM/NHNM')
+    plt.xlabel('Period (s)')
+    plt.ylabel('PSD (dB rel. 1 $(m/s^2)^2/Hz$)', fontsize=16)
+    plt.legend(ncol=2)
+    plt.xlim((1./20., 300.))
+    plt.title('PSD '+ str(st_chan[0].stats.starttime.julday).zfill(3) + ' ' +
+        str(st_chan[0].stats.starttime.hour).zfill(2) + ':' +
+        str(st_chan[0].stats.starttime.minute).zfill(2) + ' ' + st_chan[0].stats.component)
+    plt.savefig('PSD_' + str(st_chan[0].stats.starttime.julday).zfill(3) + '_' +
+        str(st_chan[0].stats.starttime.hour).zfill(2) + '.png')
+
+    plt.clf()
+
+
     return
 
 def write_ratios(psd1, psd2, psd3, per, f, time, chan):
@@ -124,7 +162,7 @@ for stime, etime in zip(stimes, etimes):
     for st_wind in st.slide(windows, windows):
         if debug:
             print(st_wind)
-        for chan in ['1','2','Z']:
+        for chan in ['Z', '1','2']:
             st_chan = st_wind.select(component=chan)
 
             p11, _ = cp(st_chan[0], st_chan[0])
@@ -137,22 +175,24 @@ for stime, etime in zip(stimes, etimes):
             per = 1./fre
             for idx, tr in enumerate(st_chan):
                 resp = inv.get_response(tr.id, stime)
-                tf, _ = resp.get_evalresp_response(tr.stats.sampling_rate, length)
+                tf, _ = resp.get_evalresp_response(1/tr.stats.sampling_rate, length, output='ACC')
                 tf = tf[1:]
+                
+                
                 if idx == 0:
-                    n11 = ((2*np.pi*fre)**2)*(p11 - p21*p13/p23)/np.abs(tf)**2
+                    n11 = (p11 - p21*p13/p23)/np.abs(tf)**2
                     n11 = 10*np.log10(n11)
                     psd1 = 10*np.log10(p11/np.abs(tf)**2)
                 elif idx == 1:
-                    n22 = ((2*np.pi*fre)**2)*(p22 - np.conjugate(p23)*p21/np.conjugate(p13))/np.abs(tf)**2
+                    n22 = (p22 - np.conjugate(p23)*p21/np.conjugate(p13))/np.abs(tf)**2
                     n22 = 10*np.log10(n22)
                     psd2 = 10*np.log10(p22/np.abs(tf)**2)
                 else:
-                    n33 = ((2*np.pi*fre)**2)*(p33 - p23*np.conjugate(p13)/p21)/np.abs(tf)**2
+                    n33 = (p33 - p23*np.conjugate(p13)/p21)/np.abs(tf)**2
                     n33 = 10*np.log10(n33)
                     psd3 = 10*np.log10(p33/np.abs(tf)**2)
             if plot:
-                plot_psd_noise()
+                plot_psd_noise(psd1, n11, psd2, n22, psd3, n33, per, st_chan)
                 # Write a routine for plotting
             # Put this in a loop to make bands
             write_ratios(psd1, psd2, psd3,per, f, st_chan[0].stats.starttime, chan)
