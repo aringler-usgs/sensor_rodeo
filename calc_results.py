@@ -24,9 +24,13 @@ length, overlap, windows = 2**14, 2**8, 4*60*60
 stimes.append(UTCDateTime('2020-282T21:00:00'))
 etimes.append(UTCDateTime('2020-289T16:00:00'))
 
-# Xtunnel vault need to adjust end time
+# Xtunnel vault
 stimes.append(UTCDateTime('2020-289T17:45:00'))
-etimes.append(UTCDateTime('2020-296T00:00:00'))
+etimes.append(UTCDateTime('2020-296T10:00:00'))
+# East vault
+stimes.append(UTCDateTime('2020-296T20:00:00'))
+etimes.append(UTCDateTime('2020-301T12:30:00'))
+
 
 def cp(tr1,tr2):
     cpval,fre = csd(tr1.data, tr2.data, NFFT=length,
@@ -37,9 +41,9 @@ def cp(tr1,tr2):
 def plot_psd_noise(psd1, n11, psd2, n22, psd3, n33, per, st_chan):
     fig = plt.figure(1, figsize=(9,9))
     plt.semilogx(per,psd1, label='PSD ' + (st_chan[0].id).replace('.', ' '))
-    plt.semilogx(per,n11, label='Noise ' + (st_chan[2].id).replace('.', ' '))
+    plt.semilogx(per,n11, label='Noise ' + (st_chan[0].id).replace('.', ' '))
     plt.semilogx(per,psd2, label='PSD ' + (st_chan[1].id).replace('.', ' '))
-    plt.semilogx(per,n22, label='Noise ' + (st_chan[2].id).replace('.', ' '))
+    plt.semilogx(per,n22, label='Noise ' + (st_chan[1].id).replace('.', ' '))
     plt.semilogx(per,psd3, label='PSD ' + (st_chan[2].id).replace('.', ' '))
     plt.semilogx(per,n33, label='Noise ' + (st_chan[2].id).replace('.', ' '))
     per2, nlnm = get_nlnm()
@@ -54,7 +58,7 @@ def plot_psd_noise(psd1, n11, psd2, n22, psd3, n33, per, st_chan):
         str(st_chan[0].stats.starttime.hour).zfill(2) + ':' +
         str(st_chan[0].stats.starttime.minute).zfill(2) + ' ' + st_chan[0].stats.component)
     plt.savefig('PSD_' + str(st_chan[0].stats.starttime.julday).zfill(3) + '_' +
-        str(st_chan[0].stats.starttime.hour).zfill(2) + '.png')
+        str(st_chan[0].stats.starttime.hour).zfill(2) + '_' + st_chan[0].stats.channel + '.png')
 
     plt.clf()
 
@@ -164,7 +168,8 @@ for stime, etime in zip(stimes, etimes):
             print(st_wind)
         for chan in ['Z', '1','2']:
             st_chan = st_wind.select(component=chan)
-
+            st_chan.sort()
+            print(st_chan)
             p11, _ = cp(st_chan[0], st_chan[0])
             p22, _ = cp(st_chan[1], st_chan[1])
             p33, _ = cp(st_chan[2], st_chan[2])

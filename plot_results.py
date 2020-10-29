@@ -9,9 +9,9 @@ mpl.rc('text', usetex=True)
 mpl.rc('font',size=16)
 
 
-locs = ['West Wault', 'Cross-Tunnel']
-days = [282, 289]
-idx = 0
+locs = ['West Wault', 'Cross-Tunnel', 'East-Tunnel']
+days = [282, 289, 296]
+idx = 2
 
 flag = 'Self-Noise'
 day = days[idx]
@@ -40,7 +40,7 @@ if flag == 'Orient':
                 vals13.append(val)
                 std13.append(float(line[4]))
     f.close()
-    print(std12)
+    print(vals12)
     fig = plt.figure(1,figsize=(8,8))
     plt.subplot(3,1,1)
     plt.title(loc)
@@ -108,14 +108,15 @@ else:
         for line in f:
             if flag in line:
                 line = line.split(', ')
-                if '1' in line[1]:
+
+                if ('1' in line[1]) and (comp in line[2]):
                     vals1.append(float(line[5]))
                     std1.append(float(line[6]))
                     times.append(float(line[3]) + float(line[4])/24.)
-                if '2' in line[1]:
+                if ('2' in line[1]) and (comp in line[2]):
                     vals2.append(float(line[5]))
                     std2.append(float(line[6]))
-                if '3' in line[1]:
+                if ('3' in line[1]) and (comp in line[2]):
                     vals3.append(float(line[5]))
                     std3.append(float(line[6]))
         f.close()
@@ -123,14 +124,20 @@ else:
         plt.errorbar(times, vals1, yerr=std1, marker='.', linestyle='',  label='STS-6')
         plt.errorbar(times, vals2, yerr= std2, marker='.', linestyle='', label='T-360')
         plt.errorbar(times, vals3,yerr=std3, marker='.', linestyle='',  label='STS-2.5')
-        plt.text(min(times), -160., 'BH' + comp)
+        if flag == 'Power':
+            plt.text(min(times), -145, 'BH' + comp)
+        else:
+            plt.text(min(times), -165, 'BH' + comp)
         plt.xlim((min(times)-.1, max(times)+.1))
         plt.legend(loc='lower center', ncol=3, fontsize=10)
         if idx == 1:
             plt.ylabel('dB relative to 1 $(m/s^2)^2/Hz$')
         if idx == 0:
             plt.title(loc)
-        plt.ylim((0.99,1.01))
+        if flag == 'Power':
+            plt.ylim((-167,-140))
+        else:
+            plt.ylim((-182,-160.))
     plt.xlabel('Time (doy)')
     plt.savefig(flag.replace(' ','') + '_' + str(day) + '.png', format='PNG')
 
