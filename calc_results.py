@@ -18,19 +18,24 @@ mpl.rc('font',size=16)
 
 debug, plot = True, True
 stimes, etimes = [], []
-length, overlap, windows = 2**14, 2**8, 4*60*60
+length, overlap, windows = 2**16, 2**10, 4*60*60
 
 # West vault firs times
 stimes.append(UTCDateTime('2020-282T21:00:00'))
 etimes.append(UTCDateTime('2020-289T16:00:00'))
-
 # Xtunnel vault
 stimes.append(UTCDateTime('2020-289T17:45:00'))
 etimes.append(UTCDateTime('2020-296T10:00:00'))
 # East vault
 stimes.append(UTCDateTime('2020-296T20:00:00'))
-etimes.append(UTCDateTime('2020-301T12:30:00'))
+etimes.append(UTCDateTime('2020-303T11:30:00'))
+# Snake pit
+stimes.append(UTCDateTime('2020-303T21:00:00'))
+etimes.append(UTCDateTime('2020-310T17:00:00'))
+# ANMO pit
 
+
+# West vault second time
 
 def cp(tr1,tr2):
     cpval,fre = csd(tr1.data, tr2.data, NFFT=length,
@@ -54,9 +59,9 @@ def plot_psd_noise(psd1, n11, psd2, n22, psd3, n33, per, st_chan):
     plt.ylabel('PSD (dB rel. 1 $(m/s^2)^2/Hz$)', fontsize=16)
     plt.legend(ncol=2)
     plt.xlim((1./20., 300.))
-    plt.title('PSD '+ str(st_chan[0].stats.starttime.julday).zfill(3) + ' ' +
-        str(st_chan[0].stats.starttime.hour).zfill(2) + ':' +
-        str(st_chan[0].stats.starttime.minute).zfill(2) + ' ' + st_chan[0].stats.component)
+    #plt.title('PSD '+ str(st_chan[0].stats.starttime.julday).zfill(3) + ' ' +
+    #    str(st_chan[0].stats.starttime.hour).zfill(2) + ':' +
+    #    str(st_chan[0].stats.starttime.minute).zfill(2) + ' ' + st_chan[0].stats.component)
     plt.savefig('PSD_' + str(st_chan[0].stats.starttime.julday).zfill(3) + '_' +
         str(st_chan[0].stats.starttime.hour).zfill(2) + '_' + st_chan[0].stats.channel + '.png')
 
@@ -201,13 +206,24 @@ for stime, etime in zip(stimes, etimes):
                 # Write a routine for plotting
             # Put this in a loop to make bands
             write_ratios(psd1, psd2, psd3,per, f, st_chan[0].stats.starttime, chan)
-            label = 'Power .1 to 30'
-            band = [0.1, 30.]
+            label = 'Power 1 to 30'
+            band = [1, 30.]
             write_noise(psd1, psd2, psd3,per, f, st_chan[0].stats.starttime, chan, label, band)
-            label = 'Self-Noise .1 to 30'
-            band = [0.1, 30.]
+            label = 'Self-Noise 1 to 30'
+            band = [1, 30.]
             write_noise(n11, n22, n33, per, f, st_chan[0].stats.starttime, chan, label, band)
-
+            label = 'Power 30 to 100'
+            band = [30., 100.]
+            write_noise(psd1, psd2, psd3, per, f, st_chan[0].stats.starttime, chan, label, band)
+            label = 'Self-Noise 30 to 100'
+            band = [30., 100.]
+            write_noise(n11, n22, n33, per, f, st_chan[0].stats.starttime, chan, label, band)
+            label = 'Power 0.1 to 1'
+            band = [0.1, 1.]
+            write_noise(psd1, psd2, psd3, per, f, st_chan[0].stats.starttime, chan, label, band)
+            label = 'Self-Noise 0.1 to 1'
+            band = [0.1, 1.]
+            write_noise(n11, n22, n33, per, f, st_chan[0].stats.starttime, chan, label, band)
         # Now we want to estimate the orientations for this time period
         calc_azi(st_wind, inv, f)
 
